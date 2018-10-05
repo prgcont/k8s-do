@@ -49,8 +49,9 @@ get_user_token_from_secret() {
     printf "done"
 }
 
-add_namespace_admin() {
+add_namespace_rbac() {
   kubectl -n ${NAMESPACE} create rolebinding --clusterrole=cluster-admin --serviceaccount=${NAMESPACE}:${SERVICE_ACCOUNT_NAME} ${SERVICE_ACCOUNT_NAME}-admin
+  kubectl -n ${NAMESPACE} create clusterrolebinding --clusterrole=system:node-proxier --serviceaccount=${NAMESPACE}:${SERVICE_ACCOUNT_NAME} kubeproxier-${SERVICE_ACCOUNT_NAME}
 }
 
 set_kube_config_values() {
