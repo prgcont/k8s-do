@@ -11,9 +11,7 @@ Write IPs to [hosts](./hosts) inventory file.
 ## Install k8s on servers
 
 ```bash
-ansible-playbook -i hosts ./kube-cluster/kube-dependencies.yml  --ssh-common-args='-o StrictHostKeyChecking=no'
-ansible-playbook -i hosts ./kube-cluster/master.yml  --ssh-common-args='-o StrictHostKeyChecking=no'
-ansible-playbook -i hosts ./kube-cluster/workers.yml  --ssh-common-args='-o StrictHostKeyChecking=no'
+ansible-playbook -i hosts ./provision-cluster.yml
 ```
 
 ## Access cluster

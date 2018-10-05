@@ -1,0 +1,4 @@
+---
+- import_playbook: ./kube-cluster/kube-dependencies.yml
+- import_playbook: ./kube-cluster/master.yml
+- import_playbook: ./kube-cluster/workers.yml
