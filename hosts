@@ -1,6 +1,10 @@
 [masters]
-master ansible_host=<MASTER_IP> ansible_user=root
+master ansible_host=<MASTER_IP>
 
 [workers]
-worker1 ansible_host=<WORKER_01_IP> ansible_user=root
-worker2 ansible_host=<WORKER_02_IP> ansible_user=root
+worker1 ansible_host=<WORKER_01_IP>
+worker2 ansible_host=<WORKER_02_IP>
+
+[all:vars]
+ansible_user=root
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
