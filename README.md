@@ -1,5 +1,7 @@
 # k8s on DO
 
+Note: This is a quick and dirty solution to quickly bring up k8s cluster. Do not use for production!!!
+
 ## setup droplets
 
 master, worker-01, worker-02.
