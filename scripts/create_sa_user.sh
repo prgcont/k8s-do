@@ -100,8 +100,8 @@ get_secret_name_from_service_account
 extract_ca_crt_from_secret
 get_user_token_from_secret
 set_kube_config_values
-add_namespace_admin
+add_namespace_rbac
 
 echo -e "\\nAll done! Test with:"
-echo "KUBECONFIG=${KUBECFG_FILE_NAME} kubectl -n get pods"
+echo "KUBECONFIG=${KUBECFG_FILE_NAME} kubectl get pods"
 KUBECONFIG=${KUBECFG_FILE_NAME} kubectl get pods
