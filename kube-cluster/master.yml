@@ -460,7 +460,6 @@
               app.kubernetes.io/name: ingress-nginx
               app.kubernetes.io/part-of: ingress-nginx
 
-
     - name: Install Nginx Ingress
       become: yes
       become_user: centos
@@ -468,3 +467,24 @@
       args:
         chdir: $HOME
         creates: nginx-ingress.txt
+
+    - name: Create clusterRole crd-admin file
+      copy:
+        dest: /etc/kubernetes/crd-admin.yml
+        content: |
+          kind: ClusterRole
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: crd-admin
+          rules:
+          - apiGroups: ["apiextensions.k8s.io"]
+            resources: ["customresourcedefinitions"]
+            verbs: ["*"]
+
+    - name: Add clusterRole crd-admin
+      become: yes
+      become_user: centos
+      shell: kubectl apply -f /etc/kubernetes/crd-admin.yml > crd-admin.txt
+      args:
+        chdir: $HOME
+        creates: crd-admin.txt
