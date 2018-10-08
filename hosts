@@ -1,11 +1,11 @@
 [masters]
-master ansible_host=206.189.0.35
+master ansible_host=<MASTER_IP>
 
 [workers]
-worker-01 ansible_host=206.189.6.76
-# worker-02 ansible_host=188.166.111.65
-# worker-03 ansible_host=188.166.40.210
+worker1 ansible_host=<WORKER_01_IP>
+worker2 ansible_host=<WORKER_02_IP>
 
 [all:vars]
 ansible_user=root
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+kube_version=1.11.3

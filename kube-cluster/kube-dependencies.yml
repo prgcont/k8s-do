@@ -1,5 +1,7 @@
 - hosts: all
   become: yes
+  vars:
+    kube_version: 1.11.3
   tasks:
    - name: install Docker
      yum:
@@ -41,9 +43,10 @@
 
    - name: install kubelet
      yum:
-        name: kubelet
+        name: kubelet-{{ kube_version }}
         state: present
         update_cache: true
+        allow_downgrade: true
 
    - name: install kubeadm
      yum:
@@ -79,5 +82,6 @@
   tasks:
    - name: install kubectl
      yum:
-        name: kubectl
+        name: kubelet-{{ kube_version }}
         state: present
+        allow_downgrade: true
