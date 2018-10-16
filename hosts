@@ -8,3 +8,4 @@ worker2 ansible_host=<WORKER_02_IP>
 [all:vars]
 ansible_user=root
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+kube_version=1.11.3
