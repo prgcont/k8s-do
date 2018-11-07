@@ -1,0 +1,61 @@
+* k8s on DO :TOC_2_gh:
+  - [[#setup-droplets][Setup droplets]]
+  - [[#install-k8s-on-servers][Install k8s on servers]]
+  - [[#access-cluster][Access cluster]]
+  - [[#create-users-and-generate-config-for-them][Create users and generate config for them]]
+  - [[#setup-istio][Setup Istio]]
+  - [[#cleanup-cluster][Cleanup cluster]]
+
+** Setup droplets
+
+Create nodes: master, worker-01, worker-02.
+
+#+BEGIN_SRC bash
+doctl compute droplet create master --size 2gb --image centos-7-x64 --region ams3 --ssh-keys <YOUR_KEYS>
+doctl compute droplet create worker-01 --size 4gb --image centos-7-x64 --region ams3 --ssh-keys <YOUR_KEYS>
+doctl compute droplet create worker-02 --size 4gb --image centos-7-x64 --region ams3 --ssh-keys <YOUR_KEYS>
+#+END_SRC
+
+Write IPs to [hosts](./hosts) inventory file.
+#+BEGIN_SRC bash
+MASTER=$(doctl compute droplet list | grep master | awk '{print $2" ansible_host="$3}')
+WORKERS=$(doctl compute droplet list | grep worker | awk '{print $2" ansible_host="$3}')
+awk -v m="$MASTER" -v w="$WORKERS" '{gsub(/<WORKERS>/,w); gsub(/<MASTER>/,m); print}' hosts.template > hosts
+cat hosts
+#+END_SRC
+
+** Install k8s on servers
+
+#+BEGIN_SRC bash
+ansible-playbook -i hosts ./provision-cluster.yml
+#+END_SRC
+
+** Access cluster
+
+scp ~kubeconfig~ from master to local
+
+#+BEGIN_SRC bash
+MASTER_IP=$(doctl compute droplet list | grep master | awk '{print $3}')
+scp root@${MASTER_IP}:/home/centos/.kube/config ~/.kube/config-do
+export KUBECONFIG=~/.kube/config-do
+#+END_SRC
+
+** Create users and generate config for them
+I've found [[https://gist.github.com/innovia/fbba8259042f71db98ea8d4ad19bd708][this script]] generating `kube/config` from service account.
+
+I've tweaked it a bit and saved it in [[./scripts/create_sa_user.sh][this repo]].
+
+To create access for user, execute: ~./scripts/create_sa_user.sh <NAMESPACE>~
+
+** Setup Istio
+
+*** Unpack istio
+#+BEGIN_SRC bash
+cd /tmp
+wget https://github.com/istio/istio/releases/download/1.0.3/istio-1.0.3-linux.tar.gz
+tar -xf istio-1.0.3-linux.tar.gz
+#+END_SRC
+
+** Cleanup cluster
+
+~doctl compute droplet delete master worker-01 worker-02~
